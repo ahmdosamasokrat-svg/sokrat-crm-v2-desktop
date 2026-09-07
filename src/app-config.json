@@ -1,0 +1,5 @@
+{
+  "crmUrl": "http://192.168.100.216",
+  "telephonyUrl": "https://100.110.36.17:8443/phone",
+  "comment": "Default endpoints. Can be overridden in %ProgramData%\\Sokrat CRM V2\\config.json"
+}

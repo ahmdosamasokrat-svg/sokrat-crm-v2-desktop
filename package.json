@@ -1,0 +1,47 @@
+{
+  "name": "sokrat-crm-v2-desktop",
+  "version": "1.0.0",
+  "description": "Sokrat CRM V2 Desktop Client with Embedded WebRTC Telephony",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "build:dir": "electron-builder --win --dir"
+  },
+  "build": {
+    "appId": "com.sokrat.crm-v2",
+    "productName": "Sokrat CRM V2",
+    "protocols": [
+      {
+        "name": "Sokrat CRM V2 Protocol",
+        "schemes": ["sokrat-crm-v2"]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "dependencies": {
+    "electron": "^44.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.0.0"
+  },
+  "author": "Sokrat",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sokrat CRM V2 — Connection Setup</title>
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --border: #334155;
+            --border-focus: #e11d2e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #e11d2e;
+            --primary-hover: #b91c1c;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .setup-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: #ffffff;
+            padding: 4px;
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-pill.online {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+        .status-pill.offline {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .status-pill.testing {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            height: 44px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 14px;
+            font-size: 14px;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.15s ease;
+            user-select: text;
+        }
+
+        input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(225, 29, 46, 0.2);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 16px 0 24px;
+            cursor: pointer;
+        }
+
+        .toggle-row input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .toggle-row span {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        button {
+            height: 46px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            flex: 2;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(225, 29, 46, 0.35);
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: transparent;
+            color: #cbd5e1;
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .error-banner {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-card">
+        <div class="brand-row">
+            <img src="icon.png" alt="Sokrat CRM V2" class="brand-logo" onerror="this.style.display='none'">
+            <div class="brand-text">
+                <h1>Sokrat CRM V2</h1>
+                <p>Enterprise Connection Setup</p>
+            </div>
+        </div>
+
+        <div id="errorBanner" class="error-banner"></div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Quick Network Presets</div>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="preset-btn" onclick="applyPreset('lan')" style="flex: 1; height: 38px; font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #f8fafc; border-radius: 8px; cursor: pointer;">
+                    &#127968; Local LAN (192.168)
+                </button>
+                <button type="button" class="preset-btn" onclick="applyPreset('vpn')" style="flex: 1; height: 38px; font-size: 13px; font-weight: 700; background: rgba(225,29,46,0.15); border: 1px solid rgba(225,29,46,0.4); color: #fca5a5; border-radius: 8px; cursor: pointer;">
+                    &#128274; Tailscale VPN (100.x)
+                </button>
+            </div>
+        </div>
+        <form id="setupForm" onsubmit="event.preventDefault(); handleSave();">
+            <div class="form-group">
+                <div class="label-row">
+                    <label for="crmUrlInput">CRM Server URL</label>
+                    <span id="crmStatus" class="status-pill">Ready</span>
+                </div>
+                <div class="input-wrap">
+                    <input
+                        type="url"
+                        id="crmUrlInput"
+                        placeholder="https://crm.yourcompany.com"
+                        required
+                        autofocus
+                    >
+                </div>
+                <p class="hint">The cloud or on-premise address of your Sokrat CRM installation.</p>
+            </div>
+
+            <div class="form-group">
+                <div class="label-row">
+                    <label for="telephonyUrlInput">VoIP Telephony Server URL</label>
+                    <span id="telephonyStatus" class="status-pill">Ready</span>
+                </div>
+                <div class="input-wrap">
+                    <input
+                        type="url"
+                        id="telephonyUrlInput"
+                        placeholder="https://192.168.100.128:8443/phone"
+                        required
+                    >
+                </div>
+                <p class="hint">The local office PBX address serving Asterisk WebRTC telephony.</p>
+            </div>
+
+            <label class="toggle-row">
+                <input type="checkbox" id="autoDetectCheckbox" checked>
+                <span>Auto-detect VoIP server endpoint from CRM connection</span>
+            </label>
+
+            <div class="btn-row">
+                <button type="button" class="btn-secondary" id="testBtn" onclick="handleTestConnection()">
+                    Test Connection
+                </button>
+                <button type="submit" class="btn-primary" id="saveBtn">
+                    Connect &amp; Save &#8599;
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const crmInput = document.getElementById('crmUrlInput');
+        const telephonyInput = document.getElementById('telephonyUrlInput');
+        const autoDetect = document.getElementById('autoDetectCheckbox');
+        const crmStatus = document.getElementById('crmStatus');
+        const telephonyStatus = document.getElementById('telephonyStatus');
+        const errorBanner = document.getElementById('errorBanner');
+        const saveBtn = document.getElementById('saveBtn');
+        const testBtn = document.getElementById('testBtn');
+
+        function setPill(el, status, text) {
+            el.className = 'status-pill ' + status;
+            el.textContent = text;
+        }
+
+        function applyPreset(mode) {
+            if (mode === 'lan') {
+                crmInput.value = 'http://192.168.100.216';
+                telephonyInput.value = 'https://100.110.36.17:8443/phone';
+            } else if (mode === 'vpn') {
+                crmInput.value = 'http://100.81.225.5:8080';
+                telephonyInput.value = 'https://100.110.36.17:8443/phone';
+            }
+            showError(null);
+            setPill(crmStatus, '', 'Ready');
+            setPill(telephonyStatus, '', 'Ready');
+        }
+
+        function showError(msg) {
+            if (!msg) {
+                errorBanner.style.display = 'none';
+                return;
+            }
+            errorBanner.textContent = msg;
+            errorBanner.style.display = 'block';
+        }
+
+        // 1. Preload current config
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (window.sokratSetup) {
+                    const cfg = await window.sokratSetup.getConfig();
+                    if (cfg) {
+                        if (cfg.crmUrl) crmInput.value = cfg.crmUrl;
+                        if (cfg.telephonyUrl) telephonyInput.value = cfg.telephonyUrl;
+                    }
+                }
+            } catch (_) {}
+        });
+
+        // 2. Auto-Discovery on CRM blur/change
+        crmInput.addEventListener('blur', async () => {
+            if (!autoDetect.checked) return;
+            const crmUrl = crmInput.value.trim();
+            if (!crmUrl) return;
+
+            try {
+                setPill(crmStatus, 'testing', 'Querying...');
+                if (window.sokratSetup) {
+                    const discovered = await window.sokratSetup.discoverEndpoints(crmUrl);
+                    if (discovered && discovered.telephonyUrl) {
+                        telephonyInput.value = discovered.telephonyUrl;
+                        setPill(crmStatus, 'online', 'Auto-Discovered');
+                    } else {
+                        setPill(crmStatus, 'online', 'Reachable');
+                    }
+                }
+            } catch (_) {
+                setPill(crmStatus, '', 'Ready');
+            }
+        });
+
+        // 3. Test Connection
+        async function handleTestConnection() {
+            showError(null);
+            const crmUrl = crmInput.value.trim();
+            const telephonyUrl = telephonyInput.value.trim();
+
+            if (!crmUrl || !telephonyUrl) {
+                showError('Please enter both CRM and VoIP server URLs to test.');
+                return;
+            }
+
+            testBtn.disabled = true;
+            setPill(crmStatus, 'testing', 'Testing...');
+            setPill(telephonyStatus, 'testing', 'Testing...');
+
+            try {
+                if (window.sokratSetup) {
+                    const res = await window.sokratSetup.testConnection({ crmUrl, telephonyUrl });
+                    
+                    if (res.crmOk) setPill(crmStatus, 'online', 'Connected');
+                    else setPill(crmStatus, 'offline', 'Unreachable');
+
+                    if (res.telephonyOk) setPill(telephonyStatus, 'online', 'Connected');
+                    else setPill(telephonyStatus, 'offline', 'Unreachable');
+
+                    if (!res.crmOk || !res.telephonyOk) {
+                        showError(res.error || 'Connection failed for one or more endpoints.');
+                    }
+                }
+            } catch (err) {
+                showError(err.message || 'Connection test failed.');
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+
+        // 4. Save and Connect
+        async function handleSave() {
+            showError(null);
+            const crmUrl = crmInput.value.trim();
+            const telephonyUrl = telephonyInput.value.trim();
+
+            if (!crmUrl || !telephonyUrl) {
+                showError('Please enter both CRM and VoIP server URLs.');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Connecting...';
+
+            try {
+                if (window.sokratSetup) {
+                    const res = await window.sokratSetup.saveConfig({ crmUrl, telephonyUrl });
+                    if (!res || !res.success) {
+                        showError(res?.error || 'Failed to save configuration.');
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = 'Connect & Save \u2197';
+                    }
+                }
+            } catch (err) {
+                showError(err.message || 'Configuration error.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Connect & Save \u2197';
+            }
+        }
+    </script>
+</body>
+</html>
