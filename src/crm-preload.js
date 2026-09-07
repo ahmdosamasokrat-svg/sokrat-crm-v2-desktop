@@ -2,6 +2,15 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
+let _registrationStatus = 'DISCONNECTED';
+
+// Cache registration status from main process sync messages
+ipcRenderer.on('crm:sync-registration', (_, data) => {
+    if (data && data.status) {
+        _registrationStatus = data.status;
+    }
+});
+
 const crmBridge = Object.freeze({
     isDesktop: true,
     version: '1.0.0',
@@ -79,7 +88,7 @@ const crmBridge = Object.freeze({
     },
 
     isRegistered() {
-        return ipcRenderer.invoke('telephony:get-registration');
+        return _registrationStatus === 'REGISTERED';
     },
 });
 
